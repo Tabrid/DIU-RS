@@ -17,7 +17,7 @@ const Login = () => {
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row">
-                <img src="https://i.ibb.co/Kqq5BhC/cais-high-resolution-logo-black-transparent.png" className="max-w-sm rounded-lg " />
+                <img src="https://i.ibb.co/KjcLt1C/cais-high-resolution-logo-transparent-1.png" className="max-w-[15rem] lg:max-w-sm rounded-lg " />
                 <div className="flex justify-center items-center  ">
                     <div className="card w-full ">
                         <div className="card-body items-center text-center">

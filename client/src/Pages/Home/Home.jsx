@@ -18,7 +18,7 @@ const Home = () => {
     return (
         <div className="my-auto mt-10">
             <div className=" flex justify-center items-center">
-                <div className=' grid grid-cols-3 gap-10'>
+                <div className=' grid grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10'>
                     {
                         data.map((item, index) => {
                             return (

@@ -109,11 +109,22 @@ export const getAllByUserId = async (req, res) => {
 };
 
 // Get all rides by rider ID
-export const getAllByRiderId = async (req, res) => {
-  const  riderId  = req.user._id; 
+export const getAllByRiderIdShare = async (req, res) => {
+  const riderId = req.user._id;
 
   try {
-    const rides = await Ride.find({rider: riderId});
+    const rides = await Ride.find({ rider: riderId , type: "share" }); // Filtering by riderId and type "share"
+    res.status(200).json(rides);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// Get all rides by rider ID
+export const getAllByRiderIdPersonal = async (req, res) => {
+  const riderId = req.user._id;
+
+  try {
+    const rides = await Ride.find({ rider: riderId , type: "personal" }); // Filtering by riderId and type "share"
     res.status(200).json(rides);
   } catch (error) {
     res.status(500).json({ message: error.message });

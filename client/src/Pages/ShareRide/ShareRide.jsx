@@ -167,6 +167,7 @@ function ShareRide() {
       });
   }
   const Payment = async () => {
+    const type = 'share';
     const order = {
       rider: rider,
       startLocationName: source,
@@ -174,7 +175,9 @@ function ShareRide() {
       startLocation: sourceCoordinates,
       endLocation: destinationCoordinates,
       distance: distance,
-      sit: sit
+      sit: sit,
+      directionData: directionData,
+      type: type
     }
 
     try {

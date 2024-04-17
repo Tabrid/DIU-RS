@@ -17,6 +17,8 @@ import dataRoutes from "./server/routes/api.routes.js";
 import { uploadSingle } from "./server/middleware/uploadSingle.js";
 import balanceRoutes from "./server/routes/balance.routes.js";
 import rideRoutes from "./server/routes/ride.routes.js";
+import ratingRoutes from "./server/routes/rating.routes.js";
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -37,6 +39,7 @@ app.use("/api/notice", noticeRoutes);
 app.use("/api/data", dataRoutes);
 app.use("/api/balance", balanceRoutes);
 app.use("/api/ride", rideRoutes);
+app.use('/api/ratings', ratingRoutes);
 
 app.use(express.static(path.join(__dirname, "/client/dist")));
 

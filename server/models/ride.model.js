@@ -51,6 +51,9 @@ const rideSchema = new mongoose.Schema(
     fare: {
       type: Number,
     },
+    directionData: {
+      type: Object,
+    },
     status: {
       type: String,
       default: "pending",
@@ -62,6 +65,10 @@ const rideSchema = new mongoose.Schema(
     end: {
       type: String,
       default: "pending",
+    },
+    type: {
+      type: String,
+      default: "share",
     },
     // createdAt, updatedAt => Member since <createdAt>
   },

@@ -6,6 +6,7 @@ import { rickshaw } from '../../Data/Data';
 function PersonalRide() {
   const mapRef = useRef();
   const [viewport, setViewport] = useState({});
+  const [selectedItem, setSelectedItem] = useState(null);
   const mapboxAccessToken = "pk.eyJ1Ijoicml5YWRoMTgxMCIsImEiOiJjbHVmdzZtNXUwbm1tMmxvZXgxbTZkZTBzIn0.ZKL7nnBAQryksHFvmNl3YQ";
   const MAPBOX_DRIVING_ENDPOINT = "https://api.mapbox.com/directions/v5/mapbox/driving/";
   useEffect(() => {
@@ -20,12 +21,15 @@ function PersonalRide() {
 
   const [source, setSource] = useState('CUET Main Gate')
   const [sourceChange, setSourceChange] = useState(false)
+  const [riderData, setRiderData] = useState(null);
   const [destinationChange, setDestinationChange] = useState(false)
   const [addressList, setAddressList] = useState([]);
   const [destination, setDistination] = useState('');
+  const [rider, setRider] = useState(null);
   const [sourceCoordinates, setSourceCoordinates] = useState({
-        lat: 22.46018927786971,
-        lng:91.97106489520495});
+    lat: 22.46018927786971,
+    lng: 91.97106489520495
+  });
   const [destinationCoordinates, setDestinationCoordinates] = useState({});
   const [directionData, setDirectionData] = useState(null);
   useEffect(() => {
@@ -33,14 +37,23 @@ function PersonalRide() {
       getAddressList()
     }, 1000)
     return () => clearTimeout(delayDebounceFn)
-  }, [ destination]);
+  }, [destination]);
 
-
+  useEffect(() => {
+    fetch("/api/users/riders")
+      .then((res) => res.json())
+      .then((data) => {
+        setRiderData(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
   const getAddressList = async () => {
     setAddressList([]);
     const query = destination;
     console.log(query);
-    const res = await fetch(`http://localhost:5000/api?q=${query}`, {
+    const res = await fetch(`/api/data/address?q=${query}`, {
       headers: {
         "Content-Type": "application/json",
       }
@@ -52,7 +65,7 @@ function PersonalRide() {
 
   }
 
-  
+
   const onDestinationAddressClick = async (item) => {
     setDistination(item.location_name);
     setAddressList([]);
@@ -61,8 +74,8 @@ function PersonalRide() {
 
       setDestinationCoordinates({
         lat: item.latitude,
-        lng:item.longitude
-,
+        lng: item.longitude
+        ,
         // lng: result.features[0].geometry.coordinates[0],
         // lat: result.features[0].geometry.coordinates[1],
       });
@@ -93,7 +106,7 @@ function PersonalRide() {
   }, [destinationCoordinates]);
 
   const getDirectionRoute = async () => {
-    
+
     try {
       const res = await fetch(
         `${MAPBOX_DRIVING_ENDPOINT}${sourceCoordinates.lng},${sourceCoordinates.lat};${destinationCoordinates.lng},${destinationCoordinates.lat}?overview=full&geometries=geojson&access_token=${mapboxAccessToken}`,
@@ -112,8 +125,46 @@ function PersonalRide() {
       console.error('Error fetching direction route:', error);
     }
   };
+  const onRiderClick = async (id) => {
+    setSelectedItem(id === selectedItem ? null : id);
+    setRider(id);
+  }
+  const Payment = async () => {
+    const sit = "2";
+    const distance = directionData?.routes[0]?.distance;
+    const type = "personal";
+    const order = {
+      rider: rider,
+      startLocationName: source,
+      endLocationName: destination,
+      startLocation: sourceCoordinates,
+      endLocation: destinationCoordinates,
+      distance: distance,
+      sit: sit,
+      directionData: directionData.routes[0]?.geometry?.coordinates,
+      type: type,
+    }
 
+    try {
+      const response = await fetch("/api/data/data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order),
+      });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      window.location.replace(data.url);
+    } catch (error) {
+      console.error("Fetch error:", error);
+      // Handle the error here, e.g., display a message to the user
+    }
+  }
   return (
     <div className="px-20">
 
@@ -122,7 +173,7 @@ function PersonalRide() {
           <div className='w-1/2'>
             {
               viewport.lat && viewport.lng ? <Map
-              className='relative'
+                className='relative'
                 ref={mapRef}
                 mapboxAccessToken={mapboxAccessToken}
                 initialViewState={{
@@ -178,12 +229,7 @@ function PersonalRide() {
                 ) : null}
               </Map> : null
             }
-            {
-              directionData?.routes ? <div className='text-center absolute'>
-                <h2 className='text-2xl font-bold'>Distance: {directionData?.routes[0]?.distance} meters</h2>
-                <h2 className='text-2xl font-bold'>Duration: {directionData?.routes[0]?.duration} seconds</h2>
-              </div> : null
-            }
+
           </div>
           <div className='w-1/2'>
             <div className=''>
@@ -230,22 +276,26 @@ function PersonalRide() {
             </div>
             <div className='flex justify-center items-center'>
               <div className='grid grid-cols-3 gap-10'>
-                {
-                  rickshaw.map((item, index) => (
-                    <div key={index} className='btn w-24 h-36 p-3 border-[1px] border-gray-200 my-2 rounded-md'>
-                      <img src={item.img} className='w-20 h-20' />
-                      <div>
-                        <h2 className='text-[18px] font-bold'>{item.distance}</h2>
-                        <h2 className='text-[18px] font-bold mt-2'>{item.price} tk</h2>
-                      </div>
+                {riderData?.map((item, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      onRiderClick(item._id);
+                    }}
+                    className={`btn w-24 h-36 p-3 border-[1px] border-gray-200 my-2 rounded-md ${selectedItem === item._id ? 'bg-blue-500 hover:bg-blue-500 text-white' : ''
+                      }`}
+                  >
+                    <img src='https://i.ibb.co/b1vHnHL/image.png' className='w-20 h-20' />
+                    <div>
+                      <h2 className='text-[18px] font-bold'>{item.distance}</h2>
+                      <h2 className='text-[18px] font-bold mt-2'>{item.price} tk</h2>
                     </div>
-                  
-                  ))
-                }
+                  </div>
+                ))}
               </div>
 
             </div>
-            <button className='btn w-full mt-5'>Confirm Now</button>
+            <button className='btn w-full mt-5' onClick={Payment}>Confirm Now</button>
           </div>
         </div>
       </div>

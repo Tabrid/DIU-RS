@@ -8,7 +8,8 @@ import {
   startRide,
   endRide,
   getAllByUserId,
-  getAllByRiderId,
+  getAllByRiderIdShare,
+  getAllByRiderIdPersonal
 } from "../controllers/ride.controller.js";
 
 const router = express.Router();
@@ -22,14 +23,15 @@ router.get("/rides", getAllRides);
 // Route to get a ride by transactionId
 router.get("/rides/:transactionId", getRideByTransactionId);
 // Other routes for updating, deleting rides, etc. can be added here
-router.patch("/rides/status/:rideId", updateStatus);
+router.put("/rides/status/:rideId", updateStatus);
 // Start ride
-router.patch("/rides/start/:rideId", startRide);
+router.put("/rides/start/:rideId", startRide);
 // End ride
-router.patch("/rides/end/:rideId", endRide);
+router.put("/rides/end/:rideId", endRide);
 // Get all rides by user ID
 router.get("/user",protectRoute, getAllByUserId);
 
 // Get all rides by rider ID
-router.get("/rider",protectRoute, getAllByRiderId);
+router.get("/rider/share",protectRoute, getAllByRiderIdShare);
+router.get("/rider/personal",protectRoute, getAllByRiderIdPersonal);
 export default router;

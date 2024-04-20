@@ -365,7 +365,7 @@ function ShareRide() {
               {
                 showSit && availableSit ? (
                   <div className='w-24 h-36 p-3 border-[1px] border-gray-200 my-2 rounded-md'>
-                    <h2 className='text-[18px] font-bold'>Sit: 0{availableSit.availableSit}</h2>
+                    <h2 className='text-[18px] font-bold'>Available Seats: 0{availableSit.availableSit}</h2>
                     <input
                       type='number'
                       value={sit}

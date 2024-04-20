@@ -55,24 +55,20 @@ const Signup = () => {
                     <div className="card w-full ">
                         <div className="card-body items-center text-center">
                             <form onSubmit={handleSubmit} className="  flex-col">
-                                <div className="relative inline-block">
+                                
                                     <input
                                         type="file"
                                         id="fileInput"
                                         name="file"
-                                        className="sr-only"
-                                        ref={fileInputRef} // Assign the ref to the input element
+                                        className="input text-center  input-bordered w-full max-w-xs"
                                     />
-                                    <label htmlFor="fileInput" className="cursor-pointer ">
-                                    <IoImagesOutline className="text-4xl " />
-                                    </label>
-                                </div>
+                               
                                 <br/>
                                 <input
                                     type="text"
                                     name="fullName"
                                     placeholder="Full Name"
-                                    className="input  input-bordered w-full max-w-xs"
+                                    className="input mt-5 input-bordered w-full max-w-xs"
                                     required
                                 />
                                 <input

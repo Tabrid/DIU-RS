@@ -17,7 +17,7 @@ export const fetchData = async (req, res) => {
     total_amount: 100,
     currency: "BDT",
     tran_id: "REF123", // use unique tran_id for each api call
-    success_url: `http://localhost:5000/api/data/success?transactionId=${transactionId}`,
+    success_url: `https://cuet-v2.onrender.com/api/data/success?transactionId=${transactionId}`,
     fail_url: "http://localhost:3030/fail",
     cancel_url: "http://localhost:3030/cancel",
     ipn_url: "http://localhost:3030/ipn",
@@ -68,7 +68,7 @@ export const success = async (req, res) => {
   );
   if (updatedRide) {
     res.redirect(
-      `http://localhost:3000/start-ride?transactionId=${transactionId}`
+      `https://cuet-v2.onrender.com/start-ride?transactionId=${transactionId}`
     );
   }
 };

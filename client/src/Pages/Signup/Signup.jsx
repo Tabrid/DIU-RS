@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
 import useSignup from "../../Hooks/useSignup";
-import signupimg from "../../assets/login.svg"
-import { useRef } from "react";
-import { IoImagesOutline } from "react-icons/io5";
 import { useAuthContext } from "../../Context/AuthContext";
 const Signup = () => {
     const { location } = useAuthContext();
     const { signup } = useSignup();
-    const fileInputRef = useRef(null);
     const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.target;
@@ -16,34 +12,40 @@ const Signup = () => {
         const password = form.password.value;
         const confirmPassword = form.confirmPassword.value;
         const role = form.role.value;
-        const image = fileInputRef.current.files[0];
-        
+        const image = form.image.files[0]; // Accessing the image file from the file input field
+    
         const formData = new FormData();
-        formData.append('image',image);
-        const url = 'https://api.imgbb.com/1/upload?key=6b61fed2ade9e1cb6596b28fb4315762';
-        fetch(url, {
-            method: 'POST',
-            body:formData
-        })
-        .then(res => res.json())
-        .then(async imageData => {
-            if(imageData.success){
+        formData.append('image', image);
+        const url = 'https://api.imgbb.com/1/upload?key=6b61fed2ade9e1cb6596b28fb4315762'; // Replace YOUR_API_KEY with your actual API key
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) {
+                throw new Error('Image upload failed');
+            }
+            const imageData = await response.json();
+            if (imageData.success) {
                 const input = {
                     fullName,
                     username,
                     password,
                     confirmPassword,
                     role,
-                    image:imageData.data.url,
+                    image: imageData.data.url,
                     location
                 };
+                console.log(input);
                 await signup(input);
             }
-            
-        })
-       
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    
         form.reset();
     };
+    
 
     return (
         <div className="hero min-h-screen bg-base-200">
@@ -55,15 +57,15 @@ const Signup = () => {
                     <div className="card w-full ">
                         <div className="card-body items-center text-center">
                             <form onSubmit={handleSubmit} className="  flex-col">
-                                
-                                    <input
-                                        type="file"
-                                        id="fileInput"
-                                        name="file"
-                                        className="input text-center  input-bordered w-full max-w-xs"
-                                    />
-                               
-                                <br/>
+
+                                <input
+                                    type="file"
+                                    name="image" // Changed name to match the key used to access the file
+                                    className="input text-center  input-bordered w-full max-w-xs"
+                                />
+
+
+                                <br />
                                 <input
                                     type="text"
                                     name="fullName"

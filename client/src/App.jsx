@@ -29,19 +29,19 @@ useEffect(() => {
         // Handle errors, e.g., permission denied, position unavailable
       },
       {
-        maximumAge: 30000, // Maximum age of cached position
-        timeout: 1000,     // Timeout for getting a new position
-        enableHighAccuracy: true // Use GPS for high accuracy
+        maximumAge: 30000, 
+        timeout: 1000,     
+        enableHighAccuracy: true 
       }
     );
-  }, 1000); // Update location every 5 seconds
+  }, 1000); 
 
     handleUpdateLocation();
   return () => clearInterval(interval);
-}, [viewport]); // No dependencies, so it runs only once when mounted
+}, [viewport]); 
 
   
-  // Remove the empty dependency array to run the effect on every render
+  
   const handleUpdateLocation = async () => {
     try {
       const response = await fetch(`/api/users/update-location`, {

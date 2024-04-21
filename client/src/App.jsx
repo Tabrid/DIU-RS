@@ -6,14 +6,15 @@ import { useEffect } from "react";
 import { useAuthContext } from "./Context/AuthContext";
 function App() {
   const { setLocation } = useAuthContext();
-  const [viewport, setViewport] = useState({
-    lat: 0,
-    lng: 0,
-  });
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      navigator.geolocation.getCurrentPosition((position) => {
+const [viewport, setViewport] = useState({
+  lat: 0,
+  lng: 0,
+});
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
         setViewport({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -21,15 +22,24 @@ function App() {
         setLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-        })
-      });
-    }, 1000);
-  
-  handleUpdateLocation();
-    // Cleanup function to clear the interval when component unmounts or when dependency changes
-    return () => clearInterval(interval);
-    
-  }, [viewport]); 
+        });
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        // Handle errors, e.g., permission denied, position unavailable
+      },
+      {
+        maximumAge: 30000, // Maximum age of cached position
+        timeout: 1000,     // Timeout for getting a new position
+        enableHighAccuracy: true // Use GPS for high accuracy
+      }
+    );
+  }, 1000); // Update location every 5 seconds
+
+    handleUpdateLocation();
+  return () => clearInterval(interval);
+}, [viewport]); // No dependencies, so it runs only once when mounted
+
   
   // Remove the empty dependency array to run the effect on every render
   const handleUpdateLocation = async () => {

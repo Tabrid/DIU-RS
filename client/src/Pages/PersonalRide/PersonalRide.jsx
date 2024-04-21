@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import Map, { Layer, Marker, Source } from 'react-map-gl';
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import { rickshaw } from '../../Data/Data';
 function PersonalRide() {
   const mapRef = useRef();
   const [viewport, setViewport] = useState({});

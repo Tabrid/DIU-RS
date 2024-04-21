@@ -16,7 +16,7 @@ const Home = () => {
         }
     }, [authUser]);
     return (
-        <div className="my-auto mt-10" style={{ backgroundImage: 'url(https://i.ibb.co/4ZRpbkq/imageedit-1-3178044879.png)' , backgroundSize: '80%', backgroundRepeat: 'no-repeat',backgroundPosition: 'center'}}>
+        <div className="my-auto mt-10" >
             <div className="flex justify-center items-center">
                 <div className='grid grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10'>
                     {

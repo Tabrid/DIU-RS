@@ -39,7 +39,7 @@ function App() {
   const getAddressList = async () => {
     setAddressList([]);
     const query = sourceChange ? source : destination;
-    const res = await fetch(`http://localhost:5000/api?q=${query}`, {
+    const res = await fetch(`https://cuet-v2-1.onrender.com/api?q=${query}`, {
       headers: {
         "Content-Type": "application/json",
       }

@@ -1,7 +1,7 @@
 const useFindRoutes = () => {
     const routes = async (formData) => {
         try {
-            const response = await fetch('http://localhost:5000/api/data/findRoutes', {
+            const response = await fetch('https://cuet-v2-1.onrender.com/api/data/findRoutes', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

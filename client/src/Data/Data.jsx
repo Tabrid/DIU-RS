@@ -19,11 +19,7 @@
         title: "Get Offers",
         url: "/get-offer"
     },
-    {
-        img: "https://i.ibb.co/y07Ks7G/5466079-1.png",
-        title: "Feedback",
-        url: "/feed-back"
-    },
+    
     {
         img: " https://i.ibb.co/09fTTX2/4541129-1.png",
         title: "Notice Panel",
@@ -62,6 +58,11 @@ const riderNav = [
         img: "https://i.ibb.co/wS2r1WZ/image.png",
         title: "Roadmap",
         url: "/road-map"
+    },
+    {
+        img: "https://i.ibb.co/y07Ks7G/5466079-1.png",
+        title: "Feedback",
+        url: "/feed-back"
     },
     {
         img: "https://i.ibb.co/kQbdZTW/image.png",

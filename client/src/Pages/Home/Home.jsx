@@ -23,8 +23,8 @@ const Home = () => {
                         data.map((item, index) => {
                             return (
                                 <Link key={index} to={item.url}>
-                                    <div className="w-48 h-48 bg-base-100 shadow-xl btn flex-col">
-                                        <div><figure><img src={item.img} alt="Shoes" className='w-20' /></figure></div>
+                                    <div className="lg:w-48 lg:h-48 border-none bg-white lg:bg-base-100 lg:shadow-xl btn flex-col w-40 h-40">
+                                        <div><figure><img src={item.img} alt="Shoes" className='w-16 lg:w-20' /></figure></div>
                                         <div className="mx-auto">
                                             <h2 className="font-semibold text-xl text-center">{item.title}</h2>
                                         </div>

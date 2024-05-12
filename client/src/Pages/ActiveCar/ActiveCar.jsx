@@ -4,7 +4,7 @@ function ActiveCar() {
     const data = Array.from({ length: 5 }, (_, index) => index + 1);
     return (
         <div className="flex justify-center items-center my-5 ">
-            <div className="grid grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {
                     data.map((item) => (
                         <div key={item} className="card w-48 bg-base-100 shadow-xl">

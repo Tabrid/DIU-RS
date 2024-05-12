@@ -75,5 +75,26 @@
         "latitude": 22.4626155531244,
         "longitude": 91.97106327377165,
         "distance": "350m"
+    },
+    {
+        "point_no": "12",
+        "location_name": "Academic Building 5",
+        "latitude": 22.462515657831652,
+        "longitude": 91.97451537919757,
+        "distance": "350m"
+    },
+    {
+        "point_no": "13",
+        "location_name": "Professor’s Building / Teacher’s Quarter",
+        "latitude": 22.468918113455295,
+        "longitude": 91.97315272050153,
+        "distance": "350m"
+    },
+    {
+        "point_no": "14",
+        "location_name": "VIP Guest House",
+        "latitude": 22.467065868283832,
+        "longitude": 91.97355023278074,
+        "distance": "350m"
     }
 ]

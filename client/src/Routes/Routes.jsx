@@ -27,6 +27,8 @@ import PersonalService from "../Pages/PersonalService/PersonalService";
 import Failed from "../Pages/Payment/Failed";
 import Successfull from "../Pages/Payment/Successfull";
 import StartRide from "../Pages/StartRide/StartRide";
+import ForgotPass from "../Pages/ForgotPass/ForgotPass";
+import ResetPassword from "../Pages/ResetPassword/ResetPassword";
 
 
 
@@ -136,6 +138,14 @@ export const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup/>,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPass/> ,
+  },
+  {
+    path: "/reset/:token",
+    element: <ResetPassword/> ,
   },
 
 

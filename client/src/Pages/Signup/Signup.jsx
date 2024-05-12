@@ -12,6 +12,8 @@ const Signup = () => {
         const password = form.password.value;
         const confirmPassword = form.confirmPassword.value;
         const role = form.role.value;
+        const email = form.email.value;
+        const phone = form.phone.value;
         const image = form.image.files[0]; // Accessing the image file from the file input field
     
         const formData = new FormData();
@@ -34,7 +36,9 @@ const Signup = () => {
                     confirmPassword,
                     role,
                     image: imageData.data.url,
-                    location
+                    location,
+                    email,
+                    phone
                 };
                 console.log(input);
                 await signup(input);
@@ -77,6 +81,20 @@ const Signup = () => {
                                     type="text"
                                     name="username"
                                     placeholder="User Name"
+                                    className="input mt-5 input-bordered w-full max-w-xs"
+                                    required
+                                />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    className="input mt-5 input-bordered w-full max-w-xs"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    placeholder="Phone"
                                     className="input mt-5 input-bordered w-full max-w-xs"
                                     required
                                 />

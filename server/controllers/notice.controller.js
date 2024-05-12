@@ -2,8 +2,9 @@ import Notice from '../models/notice.model.js';
 
 const createNotice = async (req, res) => {
   try {
-    const { notice } = req.body;
-    const newNotice = new Notice({ notice });
+    console.log(req.body);
+    const { title, notice } = req.body; // Assuming you also want to save the title
+    const newNotice = new Notice({ title, notice }); // Assuming your Notice model has both title and notice fields
     await newNotice.save();
     res.status(201).json({ message: 'Notice created successfully' });
   } catch (err) {

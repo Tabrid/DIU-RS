@@ -28,8 +28,8 @@ export const getRatingsByUserId = async (req, res) => {
     const userId = req.user._id;
     
 
-    const ratings = await Rating.find({ userId: userId }).populate(
-      "riderId",
+    const ratings = await Rating.find({ riderId: userId }).populate(
+      "userId",
       "fullName image username"
     );
 

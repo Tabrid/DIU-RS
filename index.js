@@ -18,7 +18,7 @@ import { uploadSingle } from "./server/middleware/uploadSingle.js";
 import balanceRoutes from "./server/routes/balance.routes.js";
 import rideRoutes from "./server/routes/ride.routes.js";
 import ratingRoutes from "./server/routes/rating.routes.js";
-
+import geolib from "geolib"
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -44,7 +44,7 @@ app.use('/api/ratings', ratingRoutes);
 app.use(express.static(path.join(__dirname, "/client/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client" , "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });
 
 cloudinary.config({
@@ -63,119 +63,79 @@ const MAPBOX_DRIVING_ENDPOINT = "https://api.mapbox.com/directions/v5/mapbox/dri
 const mapboxAccessToken = "pk.eyJ1Ijoicml5YWRoMTgxMCIsImEiOiJjbHVmdzZtNXUwbm1tMmxvZXgxbTZkZTBzIn0.ZKL7nnBAQryksHFvmNl3YQ";
 
 
-import locations from "./server/Data/routes1.json" assert { type: "json" };
+import location from "./server/Data/routes1.json" assert { type: "json" };
 import locations2 from "./server/Data/routes1reverse.json" assert { type: "json" };
 import locations3 from "./server/Data/routes2.json" assert { type: "json" };
 import locations4 from "./server/Data/routes2reverse.json" assert { type: "json" };
+import locations5 from "./server/Data/routes3.json" assert { type: "json" };
+import locations6 from "./server/Data/routes3reverse.json" assert { type: "json" };
 
-// Endpoint to handle user input for start and destination locations
-app.post("/api/findRoute", async (req, res) => {
-  const { startLocation, destinationLocation } = req.body;
-  // Find the points for start and destination locations for each route
-  const startPoint1 = findLocation(startLocation, locations);
-  const destinationPoint1 = findLocation(destinationLocation, locations);
-  const startPoint2 = findLocation(startLocation, locations2);
-  const destinationPoint2 = findLocation(destinationLocation, locations2);
-  const startPoint3 = findLocation(startLocation, locations3);
-  const destinationPoint3 = findLocation(destinationLocation, locations3);
-  const startPoint4 = findLocation(startLocation, locations4);
-  const destinationPoint4 = findLocation(destinationLocation, locations4);
 
-  // Calculate total distances for each route
-  const totalDistance1 = calculateTotalDistanceBetweenPoints(startPoint1, destinationPoint1, locations);
-  const totalDistance2 = calculateTotalDistanceBetweenPoints(startPoint2, destinationPoint2, locations2);
-  const totalDistance3 = calculateTotalDistanceBetweenPoints(startPoint3, destinationPoint3, locations3);
-  const totalDistance4 = calculateTotalDistanceBetweenPoints(startPoint4, destinationPoint4, locations4);
-  const routePoints1 = findPointsBetween(startPoint1, destinationPoint1, locations);
-  const routePoints2 = findPointsBetween(startPoint2, destinationPoint2, locations2);
-  const routePoints3 = findPointsBetween(startPoint3, destinationPoint3, locations3);
-  const routePoints4 = findPointsBetween(startPoint4, destinationPoint4, locations4);
-  // Find the route with the smallest total distance
-  const routes = [
-    { route: [startPoint1, ...routePoints1, destinationPoint1], totalDistance: totalDistance1 },
-    { route: [startPoint2,...routePoints2, destinationPoint2], totalDistance: totalDistance2 },
-    { route: [startPoint3,...routePoints3, destinationPoint3], totalDistance: totalDistance3 },
-    { route: [startPoint4,...routePoints4, destinationPoint4], totalDistance: totalDistance4 }
-  ];
 
-  const shortestRoute = routes.reduce((min, current) => current.totalDistance < min.totalDistance ? current : min);
-  const routeCoordinates =await getDirectionRoute(shortestRoute.route);
+app.post('/api/findRoute', async (req, res) => {
   
-  res.json({shortestRoute , routeCoordinates});
+  const { point1, point2,routes,map } = req.body;
+  console.log(req.body);
+  let locations =[];
+  if (routes==1) {
+    if (map=="forward") {
+      locations = location; 
+    } else if (map=="back"){
+      locations = locations2
+    } 
+  }
+  else if (routes==2) {
+    if (map=="forward") {
+      locations = locations3; 
+    } else if (map=="back"){
+      locations = locations4
+    } 
+  }
+  else if (routes==2) {
+    if (map=="forward") {
+      locations = locations5; 
+    } else if (map=="back"){
+      locations = locations6
+    } 
+  }
+  // Find details of two selected points
+  const point1Details = locations.findIndex(point => point.location_name.toLowerCase() === point1.toLowerCase());
+  const point2Details = locations.findIndex(point => point.location_name.toLowerCase() === point2.toLowerCase());
+  console.log(point1Details, point2Details);
+  // Check if both points are found
+  if (point1Details === -1 || point2Details === -1) {
+    console.log({ error: 'One or both points not found' });
+    return res.status(404).json({ error: 'One or both points not found' });
+    
+}
+
+
+  const pointsBetween = locations.slice(point1Details , point2Details +1);
+  console.log(pointsBetween);
+  const routeCoordinates =await getDirectionRoute(pointsBetween);
+  let fair =0;
+  if (pointsBetween.length <4) {
+    fair=5
+  } 
+  else if(pointsBetween.length < 6) {
+    fair = 10
+  }
+  else if(pointsBetween.length <9){
+    fair = 15
+  }
+  else{
+    fair = 20
+  }
+  res.json({
+    points: pointsBetween,
+    coordinates:routeCoordinates,
+    fair:fair
+  });
 });
 
-// Function to find a location by name within a given set of locations
-function findLocation(locationName, locations) {
-  return locations.find(
-    (location) =>
-      location.location_name.toLowerCase() === locationName.toLowerCase()
-  );
-}
-
-// Function to calculate the total distance between two points within a given set of locations
-function calculateTotalDistanceBetweenPoints(startPoint, destinationPoint, locations) {
-  if (!startPoint || !destinationPoint) {
-    return Infinity; // If start or destination location not found, return Infinity distance
-  }
-  const startIndex = locations.indexOf(startPoint);
-  const destinationIndex = locations.indexOf(destinationPoint);
-  // Find all points between start and destination
-  const routePoints = findPointsBetween(startPoint, destinationPoint, locations);
-
-  // Concatenate start, route points, and destination in the same array
-  const route = [startPoint, ...routePoints, destinationPoint];
-
-  // Calculate total distance excluding the 0 index distance
-  const totalDistance = calculateTotalDistance(route , startIndex , destinationIndex);
-
-  return totalDistance ;
-}
-
-// Function to find all points between start and destination within a given set of locations
-function findPointsBetween(startPoint, destinationPoint, locations) {
-  const startIndex = locations.indexOf(startPoint);
-  const destinationIndex = locations.indexOf(destinationPoint);
-
-  // Return empty array if start or destination point not found
-  if (startIndex === -1 || destinationIndex === -1) {
-    return [];
-  }
-
-  // Determine the indices of points between start and destination
-  const startIndexInclusive = Math.min(startIndex, destinationIndex);
-  const endIndexExclusive = Math.max(startIndex, destinationIndex);
-
-  // Extract the points between start and destination
-  let routePoints = locations.slice(startIndexInclusive + 1, endIndexExclusive);
-
-  // If start point index is greater than destination point index, reverse the route points
-  if (startIndex > destinationIndex) {
-    routePoints = routePoints.reverse();
-  }
-
-  return routePoints;
-}
-
-// Function to calculate the total distance excluding 0 index distance
-function calculateTotalDistance(routePoints, firstIndex, lastIndex) {
-  if (firstIndex < lastIndex) {
-    let totalDistance = 0;
-    for (let i = 1; i < routePoints.length; i++) {
-      console.log(routePoints[i].distance);
-      totalDistance = totalDistance + parseFloat(routePoints[i].distance);
-    }
-    return totalDistance;
-  } else {
-    let totalDistance = 0;
-    for (let i = routePoints.length - 2; i >= 0; i--) {
-      console.log(routePoints[i].distance);
-      totalDistance = totalDistance + parseFloat(routePoints[i].distance);
-    }
-    return totalDistance;
-  }
-}
 const getDirectionRoute = async (locations) => {
-  const routeCoordinates = [];
+  console.log(locations);
+  let routeCoordinates = [];
   try {
     for (let i = 0; i < locations.length - 1; i++) {
       const sourceCoordinates = {
@@ -188,13 +148,13 @@ const getDirectionRoute = async (locations) => {
       };
 
       const url = `${MAPBOX_DRIVING_ENDPOINT}${sourceCoordinates.lng},${sourceCoordinates.lat};${destinationCoordinates.lng},${destinationCoordinates.lat}?overview=full&geometries=geojson&access_token=${mapboxAccessToken}`;
-      
+
       const response = await fetch(url, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-  
+
       const result = await response.json();
       const coordinates = result?.routes[0]?.geometry?.coordinates;
       if (coordinates) {

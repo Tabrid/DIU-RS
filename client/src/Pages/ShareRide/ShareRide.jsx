@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import Map, { Layer, Marker, Source } from 'react-map-gl';
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import toast from 'react-hot-toast';
 function ShareRide() {
   const [riderData, setRiderData] = useState(null);
-
+  const [selected, setSelected] = useState(null);
   const mapRef = useRef();
   const [viewport, setViewport] = useState({});
   const [selectedItem, setSelectedItem] = useState(null);
+
   const mapboxAccessToken = "pk.eyJ1Ijoicml5YWRoMTgxMCIsImEiOiJjbHVmdzZtNXUwbm1tMmxvZXgxbTZkZTBzIn0.ZKL7nnBAQryksHFvmNl3YQ";
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -22,6 +24,7 @@ function ShareRide() {
     fetch("/api/users/riders")
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setRiderData(data);
       })
       .catch((error) => {
@@ -38,12 +41,29 @@ function ShareRide() {
   const [destinationCoordinates, setDestinationCoordinates] = useState({});
   const [directionData, setDirectionData] = useState(null);
   const [pointData, setPointData] = useState(null);
-  const [distance, setDistance] = useState(0);
   const [showSit, setShowSit] = useState(false);
-  const [sit, setSit] = useState(0);
   const [availableSit, setAvailableSit] = useState(0);
-  const [rider , setRider] = useState(null);
+  const [rider, setRider] = useState(null);
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [fare,setfare] = useState(null);
 
+  // Function to handle click on a seat
+  const handleSeatClick = (seat) => {
+    // Check if the seat is already selected
+    const isSeatSelected = selectedSeats.includes(seat);
+    // Toggle selection state
+    if (isSeatSelected) {
+      // Remove seat from selectedSeats if already selected
+      setSelectedSeats(selectedSeats.filter(selectedSeat => selectedSeat !== seat));
+    } else {
+      // Add seat to selectedSeats if not selected
+      setSelectedSeats([...selectedSeats, seat]);
+    }
+  };
+  const handleRouteClick = (index) => {
+    setSelectedRoute(index);
+  };
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -101,7 +121,7 @@ function ShareRide() {
       console.error("Error fetching data:", error);
     }
   };
-  
+
   useEffect(() => {
     if (sourceCoordinates) {
       mapRef.current?.flyTo({
@@ -118,16 +138,18 @@ function ShareRide() {
         duration: 2500,
       });
     }
-    if (sourceCoordinates.lat && sourceCoordinates.lng && destinationCoordinates.lat && destinationCoordinates.lng) {
-      getDirectionRoute();
-    }
+    
   }, [destinationCoordinates]);
 
   const getDirectionRoute = async () => {
     const formData = {
-      startLocation: source,
-      destinationLocation: destination
+      point1: source,
+      point2: destination,
+      routes: selectedRoute,
+      map:selected
+
     }
+    console.log(formData);
     try {
       const response = await fetch('http://localhost:5000/api/findRoute', {
         method: 'POST',
@@ -143,12 +165,14 @@ function ShareRide() {
 
       const data = await response.json();
       console.log(data);
-      setDirectionData(data.routeCoordinates);
-      setPointData(data.shortestRoute.route);
-      setDistance(data.shortestRoute.distance);
+      setDirectionData(data.coordinates);
+      setPointData(data.points);
+      setfare(data.fair)
+      // setDistance(data.shortestRoute.distance);
       // Handle success, such as showing a success message or redirecting
     } catch (error) {
       console.error('Error fetching direction route:', error);
+     
       // Handle errors, such as showing an error message to the user
     }
   };
@@ -160,7 +184,7 @@ function ShareRide() {
       .then((res) => res.json())
       .then((data) => {
         setAvailableSit(data);
-        console.log(data , id);
+        console.log(data.availableSit[0].sit);
       })
       .catch((error) => {
         console.error(error);
@@ -174,12 +198,12 @@ function ShareRide() {
       endLocationName: destination,
       startLocation: sourceCoordinates,
       endLocation: destinationCoordinates,
-      distance: distance,
-      sit: sit,
       directionData: directionData,
-      type: type
+      type: type,
+      selectedSeats:selectedSeats,
+      fare:fare
     }
-
+      console.log(order);
     try {
       const response = await fetch("/api/data/data", {
         method: "POST",
@@ -203,10 +227,10 @@ function ShareRide() {
 
 
   return (
-    <div className="px-20">
+    <div className="lg:px-20 px-[0px]">
       <div className="hero min-h-screen ">
         <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className='w-1/2'>
+          <div className='lg:w-1/2 w-full'>
             {
               viewport.lat && viewport.lng ? <Map
                 className='relative'
@@ -217,7 +241,7 @@ function ShareRide() {
                   latitude: viewport.lat,
                   zoom: 14
                 }}
-                style={{ width: 600, height: 400 }}
+                style={{ width: 400, height: 400 }}
                 mapStyle="mapbox://styles/riyadh1810/cluis3e8e000z01pb18gi58iu"
               >
                 <Marker
@@ -283,13 +307,13 @@ function ShareRide() {
               </Map> : null
             }
             {
-              directionData?.routes ? <div className='text-center absolute'>
-                <h2 className='text-2xl font-bold'>Distance: {directionData?.routes[0]?.distance} meters</h2>
-                <h2 className='text-2xl font-bold'>Duration: {directionData?.routes[0]?.duration} seconds</h2>
+              fare&& selectedSeats ? <div className='text-center absolute'>
+                <h2 className='text-2xl font-bold'>fare:{fare * selectedSeats.length}tk</h2>
+                
               </div> : null
             }
           </div>
-          <div className='w-1/2'>
+          <div className='lg:w-1/2 w-full'>
             <div className=''>
               <div className='relative'>
                 <label className='text-gray-400 text-[13px]'>Where From?</label>
@@ -342,7 +366,46 @@ function ShareRide() {
 
               </div>
             </div>
-            <div className='flex justify-center items-center'>
+            <div className='flex gap-3 my-5'>
+              <div
+                className={`p-3 cursor-pointer border border-black rounded-md ${selectedRoute === 1 ? 'bg-blue-500' : ''}`}
+                onClick={() => handleRouteClick(1)}
+              >
+                Routes 1
+              </div>
+              <div
+                className={`p-3 cursor-pointer border border-black rounded-md ${selectedRoute === 2 ? 'bg-blue-500' : ''}`}
+                onClick={() => handleRouteClick(2)}
+              >
+                Routes 2
+              </div>
+              <div
+                className={`p-3 cursor-pointer border border-black rounded-md ${selectedRoute === 3 ? 'bg-blue-500' : ''}`}
+                onClick={() => handleRouteClick(3)}
+              >
+                Routes 3
+              </div>
+            </div>
+            <div className='flex gap-3'>
+              <div
+                className={`p-3 w-1/2 text-center border border-black rounded-md ${selected === 'forward' ? 'bg-blue-500' : ''
+                  }`}
+                onClick={() => {setSelected('forward') }}
+              >
+                Forward
+              </div>
+              <div
+                className={`p-3 w-1/2 text-center border border-black rounded-md ${selected === 'back' ? 'bg-blue-500' : ''
+                  }`}
+                onClick={() => {setSelected('back')}}
+              >
+                Back
+              </div>
+            </div>
+            <div className='w-full p-3 border border-black rounded-md text-center mt-3 cursor-pointer' onClick={getDirectionRoute}>
+              Get Direction
+            </div>
+            <div className=''>
               <div className='grid grid-cols-3 gap-10'>
                 {riderData?.map((item, index) => (
                   <div
@@ -354,32 +417,41 @@ function ShareRide() {
                       }`}
                   >
                     <img src='https://i.ibb.co/b1vHnHL/image.png' className='w-20 h-20' />
-                    <div>
-                      <h2 className='text-[18px] font-bold'>{item.distance}</h2>
-                      <h2 className='text-[18px] font-bold mt-2'>{item.price} tk</h2>
-                    </div>
+                    
                   </div>
                 ))}
               </div>
 
               {
                 showSit && availableSit ? (
-                  <div className='w-24 h-36 p-3 border-[1px] border-gray-200 my-2 rounded-md'>
-                    <h2 className='text-[18px] font-bold'>Available Seats: 0{availableSit.availableSit}</h2>
-                    <input
-                      type='number'
-                      value={sit}
-                      onChange={(e) => {
-                        let newValue = parseInt(e.target.value);
-                        if (newValue < 0) {
-                          newValue = 0;
-                        } else if (newValue > availableSit.availableSit) {
-                          newValue = availableSit.availableSit;
-                        }
-                        setSit(newValue);
-                      }}
-                      className='w-full h-14 p-1 border-[1px] border-gray-200 rounded-md'
-                    />
+                  <div className='p-3 border-[1px] border-gray-200 my-2 rounded-md grid grid-cols-2 gap-3'>
+                    <div
+                      className={`p-3 w-full text-center border border-black rounded-md ${selectedSeats.includes('01') ? 'bg-blue-500' : ''
+                        } ${availableSit.availableSit[0].available === false ? 'cursor-not-allowed' : '' } `}
+                      onClick={() => handleSeatClick('01')}
+                    >
+                      Seat 1
+                    </div>
+                    <div
+                      className={`cursor-not-allowed p-3 w-full  border border-black rounded-md flex justify-center `}
+
+                    >
+                      <img className='w-7 h-7' src="https://i.ibb.co/djR55TY/image.png" alt="" />
+                    </div>
+                    <div
+                      className={`p-3 w-full text-center border border-black rounded-md ${selectedSeats.includes('02') ? 'bg-blue-500' : ''
+                        } ${availableSit.availableSit[1].available === false ? 'cursor-not-allowed' : '' }`}
+                      onClick={() => handleSeatClick('02')}
+                    >
+                      Seat 2
+                    </div>
+                    <div
+                      className={`p-3 w-full text-center border border-black rounded-md ${selectedSeats.includes('03') ? 'bg-blue-500' : ''
+                        } ${availableSit.availableSit[2].available === false ? 'cursor-not-allowed' : '' }`}
+                      onClick={() => handleSeatClick('03')}
+                    >
+                      Seat 3
+                    </div>
                   </div>
                 ) : null
               }

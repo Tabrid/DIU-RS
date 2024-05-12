@@ -217,11 +217,38 @@ export const getAvailableSitById = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      console.log(user.avaiableSit);
+      console.log(user.seats);
       // Get the availableSit field from the user
-      res.status(200).json({ availableSit: user.avaiableSit});
+      res.status(200).json({ availableSit: user.seats});
     } catch (error) {
       res.status(500).json({ message: error.message });
+    }
+  };
+
+
+ export const getUsers = async (req, res) => {
+    const role = 'User';
+    try {
+      const users = await User.find({ role }).select("-password");
+      if (!users || users.length === 0) {
+        return res.status(404).json({ message: "Users not found for this role" });
+      }
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+ export const getRiders = async (req, res) => {
+    const role = 'Rider';
+    try {
+      const users = await User.find({ role }).select("-password");
+      if (!users || users.length === 0) {
+        return res.status(404).json({ message: "Users not found for this role" });
+      }
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   };
   

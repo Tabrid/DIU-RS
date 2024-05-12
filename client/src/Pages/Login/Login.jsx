@@ -37,8 +37,10 @@ const Login = () => {
                                     className="input mt-5 input-bordered w-full max-w-xs"
                                     required
                                 />
-
-                                <input className="btn mt-10 w-full max-w-xs bg-slate-300" type="submit" value="LogIn" />
+                                <br/>
+                                <Link to="/forgot-password" className="text-sm text-start underline">Forgot Password?</Link>
+                                <br/>
+                                <input className="btn mt-7 w-full max-w-xs bg-slate-300" type="submit" value="LogIn" />
                             </form>
 
                             <h1 className=" ">Don&apos;t have any account? <Link className="underline" to='/signup'>Create account</Link></h1>

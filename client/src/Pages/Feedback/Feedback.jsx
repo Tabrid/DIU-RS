@@ -13,7 +13,9 @@ function Feedback() {
   
   return (
     <div>
-      <div className='grid grid-cols-3'>
+      {
+        data.length > 0 ? (
+          <div className='grid grid-cols-3'>
         {data.map((item, index) => (
           <div key={index} className="flex items-center p-4 border-b border-gray-200 w-96 gap-3">
             <div className='1/4'>
@@ -40,6 +42,12 @@ function Feedback() {
           </div>
         ))}
       </div>
+        ) : (
+         <div className='flex justify-center items-center mt-20'>
+           <h1 className='uppercase text-3xl font-bold'>no feedback</h1>
+         </div>
+        )
+      }
     </div>
   );
 }

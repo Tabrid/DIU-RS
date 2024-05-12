@@ -10,6 +10,8 @@ import {
   getAllRiders,
   updateAvailableSit,
   getAvailableSitById,
+  getUsers,
+  getRiders
 } from "../controllers/user.controller.js";
 
 const router = express.Router();
@@ -23,5 +25,7 @@ router.delete("/users/:userId", protectRoute, deleteUserById);
 router.get("/riders", getAllRiders);
 router.put("/riders/:id", updateAvailableSit);
 router.get("/riders/:id", getAvailableSitById);
+router.get("/user", getUsers);
+router.get("/rider", getRiders);
 
 export default router;

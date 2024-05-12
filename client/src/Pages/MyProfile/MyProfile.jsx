@@ -52,6 +52,8 @@ const MyProfile = () => {
                         <div className="px-6 py-4 grid grid-cols-2 gap-5 w-full">
                         <input value={user.fullName} type="text" placeholder="Type here" className="input input-bordered w-full " />
                         <input value={user.username} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                        <input value={user.phone} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                        <input value={user.email} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                         <input value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)} type="text" placeholder="Old Password" className="input input-bordered w-full max-w-xs"  />
                         <input value={newPassword}

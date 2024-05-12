@@ -1,5 +1,6 @@
 // dataController.js
 import { ObjectId } from "mongodb";
+import User from "../models/user.model.js";
 import SSLCommerzPayment from "sslcommerz-lts";
 import Ride from "../models/ride.model.js";
 const store_id = "cais661c139428107";
@@ -12,12 +13,14 @@ import locations3 from "../Data/routes2.json" assert { type: "json" };
 import locations4 from "../Data/routes2reverse.json" assert { type: "json" };
 export const fetchData = async (req, res) => {
   console.log(req.body);
+  const { rider, selectedSeats } = req.body; // Extract selected seats from request body
+  
   const transactionId = new ObjectId().toString();
   const data = {
     total_amount: 100,
     currency: "BDT",
     tran_id: "REF123", // use unique tran_id for each api call
-    success_url: `https://cuet-v2.onrender.com/api/data/success?transactionId=${transactionId}`,
+    success_url: `http://localhost:5000/api/data/success?transactionId=${transactionId}`,
     fail_url: "http://localhost:3030/fail",
     cancel_url: "http://localhost:3030/cancel",
     ipn_url: "http://localhost:3030/ipn",
@@ -43,21 +46,51 @@ export const fetchData = async (req, res) => {
     ship_postcode: 1000,
     ship_country: "Bangladesh",
   };
-  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
-  sslcz.init(data).then((apiResponse) => {
+
+  try {
+    const user = await User.findById({ _id:rider });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    console.log(user);
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+    const apiResponse = await sslcz.init(data); // Initialize payment
+
     // Redirect the user to payment gateway
     let GatewayPageURL = apiResponse.GatewayPageURL;
-    const data = {
+
+    // Create ride data
+    const rideData = {
       transactionId,
       ...req.body,
       paid: false,
-      user: req.user._id,
+      user: req.user._id, // We will assign user ID after finding the user
     };
-    const ride = Ride.create(data);
+
+    // Find the user
+    
+
+    // Update seat availability
+    user.seats.forEach(seat => {
+      if (selectedSeats.includes(seat.sit)) {
+        seat.available = false; // Assuming selectedSeats means the seats are no longer available
+      }
+    });
+
+    // Save the updated user document
+    await user.save();
+    console.log(user);
+
+    // Create ride record
+    const ride = await Ride.create(rideData);
+
     if (ride) {
       res.send({ url: GatewayPageURL });
     }
-  });
+  } catch (error) {
+    console.error('Error in fetchData:', error.message);
+    res.status(500).send({ error: 'Internal server error' });
+  }
 };
 
 export const success = async (req, res) => {
@@ -68,7 +101,7 @@ export const success = async (req, res) => {
   );
   if (updatedRide) {
     res.redirect(
-      `https://cuet-v2.onrender.com/start-ride?transactionId=${transactionId}`
+      `http://localhost:5000/start-ride?transactionId=${transactionId}`
     );
   }
 };

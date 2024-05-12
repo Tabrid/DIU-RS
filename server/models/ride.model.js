@@ -70,6 +70,9 @@ const rideSchema = new mongoose.Schema(
       type: String,
       default: "share",
     },
+    selectedSeats:{
+      type:[]
+    }
     // createdAt, updatedAt => Member since <createdAt>
   },
   { timestamps: true }

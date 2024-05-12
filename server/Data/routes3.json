@@ -1,0 +1,59 @@
+[
+    {
+      "point_no": "01",
+      "location_name": "CUET Main Gate",
+      "latitude": 22.46018927786971,
+      "longitude": 91.97106489520495,
+      "distance": "350"
+    },
+    {
+      "point_no": "02",
+      "location_name": "Golchattar",
+      "latitude": 22.462013151612258,
+      "longitude": 91.97114035504184,
+      "distance": "350"
+    },
+    {
+      "point_no": "03",
+      "location_name": "CUET Central Mosque",
+      "latitude": 22.4626155531244,
+      "longitude": 91.97106327377165,
+      "distance": "350"
+    },
+    {
+      "point_no": "04",
+      "location_name": "Hotasha Chottor",
+      "latitude": 22.463930001630906,
+      "longitude": 91.97103148566597,
+      "distance": "350"
+    },
+    {
+      "point_no": "05",
+      "location_name": "Central Field Road",
+      "latitude": 22.46596567729721,
+      "longitude": 91.97091860160138,
+      "distance": "350"
+    },
+    {
+      "point_no": "06",
+      "location_name": "CUET Bus Stand (Teacher’s Golchattar)",
+      "latitude": 22.468126269563623,
+      "longitude": 91.9710079132232,
+      "distance": "350"
+    },
+    {
+      "point_no": "07",
+      "location_name": "Teacher’s Dormitory Road",
+      "latitude": 22.466855829582407,
+      "longitude": 91.96852806034104,
+      "distance": "350"
+    },
+    {
+      "point_no": "08",
+      "location_name": "CUET West Gate",
+      "latitude": 22.466873459338228,
+      "longitude": 91.96806425611821,
+      "distance": "350"
+    }
+  ]
+  

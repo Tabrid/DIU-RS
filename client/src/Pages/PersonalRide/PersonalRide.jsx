@@ -25,6 +25,7 @@ function PersonalRide() {
   const [addressList, setAddressList] = useState([]);
   const [destination, setDistination] = useState('');
   const [rider, setRider] = useState(null);
+  const [fare , setFare ] = useState(null);
   const [sourceCoordinates, setSourceCoordinates] = useState({
     lat: 22.46018927786971,
     lng: 91.97106489520495
@@ -120,6 +121,19 @@ function PersonalRide() {
       console.log(result);
       console.log(result?.routes[0]?.geometry?.coordinates);
       setDirectionData(result);
+      const distance = result?.routes[0]?.distance;
+      if (distance<300) {
+        setFare(10)
+      }
+      else if (distance < 600) {
+        setFare(20)
+      }
+      else if (distance < 900) {
+        setFare(30)
+      }
+      else{
+        setFare(40)
+      }
     } catch (error) {
       console.error('Error fetching direction route:', error);
     }
@@ -129,8 +143,7 @@ function PersonalRide() {
     setRider(id);
   }
   const Payment = async () => {
-    const sit = "2";
-    const distance = directionData?.routes[0]?.distance;
+    
     const type = "personal";
     const order = {
       rider: rider,
@@ -138,10 +151,10 @@ function PersonalRide() {
       endLocationName: destination,
       startLocation: sourceCoordinates,
       endLocation: destinationCoordinates,
-      distance: distance,
-      sit: sit,
+      selectedSeats:[ '01', '02','03' ],
       directionData: directionData.routes[0]?.geometry?.coordinates,
       type: type,
+      fare:fare
     }
 
     try {
@@ -165,11 +178,11 @@ function PersonalRide() {
     }
   }
   return (
-    <div className="px-20">
+    <div className="lg:px-20 px-[0px]">
 
       <div className="hero min-h-screen ">
         <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className='w-1/2'>
+          <div className='lg:w-1/2 w-full'>
             {
               viewport.lat && viewport.lng ? <Map
                 className='relative'
@@ -180,7 +193,7 @@ function PersonalRide() {
                   latitude: viewport.lat,
                   zoom: 14
                 }}
-                style={{ width: 600, height: 400 }}
+                style={{ width: 400, height: 400 }}
                 mapStyle="mapbox://styles/riyadh1810/cluis3e8e000z01pb18gi58iu"
               >
                 <Marker
@@ -228,9 +241,11 @@ function PersonalRide() {
                 ) : null}
               </Map> : null
             }
-
+            {
+              fare ? <h1 className='text-3xl font-bold'>Fare:{fare} tk</h1>:null
+            }
           </div>
-          <div className='w-1/2'>
+          <div className='lg:w-1/2 w-full'>
             <div className=''>
               <div className='relative'>
                 <label className='text-gray-400 text-[13px]'>Where From?</label>
@@ -285,10 +300,6 @@ function PersonalRide() {
                       }`}
                   >
                     <img src='https://i.ibb.co/b1vHnHL/image.png' className='w-20 h-20' />
-                    <div>
-                      <h2 className='text-[18px] font-bold'>{item.distance}</h2>
-                      <h2 className='text-[18px] font-bold mt-2'>{item.price} tk</h2>
-                    </div>
                   </div>
                 ))}
               </div>

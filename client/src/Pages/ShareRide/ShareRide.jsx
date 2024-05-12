@@ -151,7 +151,7 @@ function ShareRide() {
     }
     console.log(formData);
     try {
-      const response = await fetch('https://cuet-v2-1.onrender.com/api/findRoute', {
+      const response = await fetch('http://localhost:5000/api/findRoute', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -436,7 +436,7 @@ function ShareRide() {
                       className={`cursor-not-allowed p-3 w-full  border border-black rounded-md flex justify-center `}
 
                     >
-                      <img className='w-7 h-7' src="https://i.ibb.co/djR55TY/image.png" alt="" />
+                      <img className='w-7 h-7' src="https://i.ibb.co/CvXpckN/image.png" alt="" />
                     </div>
                     <div
                       className={`p-3 w-full text-center border border-black rounded-md ${selectedSeats.includes('02') ? 'bg-blue-500' : ''

@@ -172,8 +172,8 @@ const StartRide = () => {
                                             ref={mapRef}
                                             mapboxAccessToken={mapboxAccessToken}
                                             initialViewState={{
-                                                longitude: 91.97106489520495,
-                                                latitude: 22.46018927786971,
+                                                longitude: 90.32016843933931,
+                                                latitude: 23.87701757428925,
                                                 zoom: 14
                                             }}
                                             style={{ width: 600, height: 400 }}
@@ -234,8 +234,8 @@ const StartRide = () => {
                                         ref={mapRef}
                                         mapboxAccessToken={mapboxAccessToken}
                                         initialViewState={{
-                                            longitude: 91.97106489520495,
-                                            latitude: 22.46018927786971,
+                                            longitude: 90.32016843933931,
+                                            latitude: 23.87701757428925,
                                             zoom: 14
                                         }}
                                         style={{ width: 600, height: 400 }}
@@ -334,7 +334,7 @@ const StartRide = () => {
                                         </div>
                                         <button type="submit" className="btn w-full">Submit</button>
                                     </form>
-                                </div>: <div className="min-h-screen flex justify-center items-center">
+                                </div> : <div className="min-h-screen flex justify-center items-center">
                                     <h1>Waiting for user Review</h1>
                                 </div>
                             }

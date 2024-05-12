@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import useSignup from "../../Hooks/useSignup";
 import { useAuthContext } from "../../Context/AuthContext";
+import { HashLoader  } from 'react-spinners';
 const Signup = () => {
-    const { location } = useAuthContext();
-    const { signup } = useSignup();
+    const { location  } = useAuthContext();
+    const { signup ,loading } = useSignup();
     const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.target;
@@ -53,9 +54,10 @@ const Signup = () => {
 
     return (
         <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col lg:flex-row gap-5">
+            {
+                loading ? <HashLoader color="#020303" /> : <div className="hero-content flex-col lg:flex-row gap-5">
                 <div className="w-1/2">
-                    <img src='https://i.ibb.co/KjcLt1C/cais-high-resolution-logo-transparent-1.png' className=" rounded-lg max-w-[15rem] lg:max-w-sm" />
+                    <img src='https://i.ibb.co/qCwS5cx/image-removebg-preview-5.png' className=" rounded-lg max-w-[15rem] lg:max-w-sm" />
                 </div>
                 <div className="flex justify-center w-full lg:w-1/2">
                     <div className="card w-full ">
@@ -124,6 +126,7 @@ const Signup = () => {
                     </div>
                 </div>
             </div>
+            }
         </div>
 
     );

@@ -1,0 +1,100 @@
+[
+    {
+        "point_no": "01",
+        "location_name": "CUET Main Gate",
+        "latitude": 23.8980,
+        "longitude": 90.3563,
+        "distance": "0m"
+    },
+    {
+        "point_no": "02",
+        "location_name": "Bangabandhu Hall Pukur Par (Tamashar Ghat)",
+        "latitude": 22.461051128376205,
+        "longitude": 91.97008416229328,
+        "distance": "300"
+    },
+    {
+        "point_no": "03",
+        "location_name": "TSC/ Cafeteria",
+        "latitude": 22.46200242197328,
+        "longitude": 91.97010322331016,
+        "distance": "350"
+    },
+    {
+        "point_no": "04",
+        "location_name": "Golchattar",
+        "latitude": 22.462013151612258,
+        "longitude": 91.97114035504184,
+        "distance": "1400m"
+    },
+    {
+        "point_no": "05",
+        "location_name": "West- East Gallery",
+        "latitude": 22.462040356217152,
+        "longitude": 91.97254147180763,
+        "distance": "800"
+    },
+    {
+        "point_no": "06",
+        "location_name": "Civil Engineering Building",
+        "latitude": 22.46250509087362,
+        "longitude": 91.9733586572813,
+        "distance": "140m"
+    },
+    {
+        "point_no": "07",
+        "location_name": "EME Building",
+        "latitude": 22.463888980897014,
+        "longitude": 91.9732334458637,
+        "distance": "120m"
+    },
+    {
+        "point_no": "08",
+        "location_name": "Shamsen Nahar Khan Hall",
+        "latitude": 22.46467606275094,
+        "longitude": 91.97282512134926,
+        "distance": "130m"
+    },
+    {
+        "point_no": "09",
+        "location_name": "Sufia Kamal Hall",
+        "latitude": 22.464312243903194,
+        "longitude": 91.97196010208731,
+        "distance": "160m"
+    },
+    {
+        "point_no": "10",
+        "location_name": "Hotasha Chottor",
+        "latitude": 22.463930001630906,
+        "longitude": 91.97103148566597,
+        "distance": "140m"
+    },
+    {
+        "point_no": "11",
+        "location_name": "CUET Central Mosque",
+        "latitude": 22.4626155531244,
+        "longitude": 91.97106327377165,
+        "distance": "350m"
+    },
+    {
+        "point_no": "12",
+        "location_name": "Academic Building 5",
+        "latitude": 22.462515657831652,
+        "longitude": 91.97451537919757,
+        "distance": "350m"
+    },
+    {
+        "point_no": "13",
+        "location_name": "Professor’s Building / Teacher’s Quarter",
+        "latitude": 22.468918113455295,
+        "longitude": 91.97315272050153,
+        "distance": "350m"
+    },
+    {
+        "point_no": "14",
+        "location_name": "VIP Guest House",
+        "latitude": 22.467065868283832,
+        "longitude": 91.97355023278074,
+        "distance": "350m"
+    }
+]

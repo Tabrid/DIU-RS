@@ -6,8 +6,8 @@ import { useMediaQuery } from 'react-responsive';
 function RoadMap() {
     const mapRef = useRef();
     const location = {
-        lat: 22.46018927786971,
-        lng: 91.97106489520495,
+        lat: 23.875675672131138,
+        lng: 90.32076051993644,
     }
     const isSmallScreen = useMediaQuery({ query: '(max-width: 767px)' }); // Define your small screen size here
     const isLargeScreen = useMediaQuery({ query: '(min-width: 1024px)' }); // Define your large screen size here

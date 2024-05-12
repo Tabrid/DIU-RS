@@ -18,7 +18,7 @@ function PersonalRide() {
   }, [])
 
 
-  const [source, setSource] = useState('CUET Main Gate')
+  const [source, setSource] = useState('DIU Smart City')
   const [sourceChange, setSourceChange] = useState(false)
   const [riderData, setRiderData] = useState(null);
   const [destinationChange, setDestinationChange] = useState(false)
@@ -27,8 +27,8 @@ function PersonalRide() {
   const [rider, setRider] = useState(null);
   const [fare , setFare ] = useState(null);
   const [sourceCoordinates, setSourceCoordinates] = useState({
-    lat: 22.46018927786971,
-    lng: 91.97106489520495
+    lat: 23.87701757428925,
+    lng: 90.32016843933931
   });
   const [destinationCoordinates, setDestinationCoordinates] = useState({});
   const [directionData, setDirectionData] = useState(null);
@@ -299,7 +299,7 @@ function PersonalRide() {
                     className={`btn w-24 h-36 p-3 border-[1px] border-gray-200 my-2 rounded-md ${selectedItem === item._id ? 'bg-blue-500 hover:bg-blue-500 text-white' : ''
                       }`}
                   >
-                    <img src='https://i.ibb.co/b1vHnHL/image.png' className='w-20 h-20' />
+                    <img src='https://i.ibb.co/CvXpckN/image.png' className='w-20 h-20' />
                   </div>
                 ))}
               </div>

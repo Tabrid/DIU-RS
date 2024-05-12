@@ -10,8 +10,8 @@ const Navbar = () => {
             <div className="navbar bg-base-100">
                 <div className="navbar-start">
                     
-                    <Link className="w-36 ">
-                        <img alt="Tailwind CSS Navbar component" src="https://i.ibb.co/0KFnPyD/cais-high-resolution-logo-black-transparent.png" />
+                    <Link className="w-36 h-16">
+                        <img alt="Tailwind CSS Navbar component" src="https://i.ibb.co/qCwS5cx/image-removebg-preview-5.png" />
                     </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">

@@ -151,7 +151,7 @@ function ShareRide() {
     }
     console.log(formData);
     try {
-      const response = await fetch('http://localhost:5000/api/findRoute', {
+      const response = await fetch('https://diu-rs.onrender.com/api/findRoute', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
